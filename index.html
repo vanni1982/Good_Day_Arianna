@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Good Morning 🙂</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle, #1a0b2e 0%, #05020a 100%);
+            color: #fff;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Character Selection Slider Container */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 450px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            z-index: 2;
+        }
+
+        .card-wrapper {
+            position: absolute;
+            width: 240px;
+            height: 350px;
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.4s ease, box-shadow 0.4s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* Card Styling parang Premium Game Character UI */
+        .card {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2c1654 0%, #12072b 100%);
+            border: 3px solid #3d1e7d;
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+        }
+
+        /* Neon Border Accent lines inside the card */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            right: 6px;
+            bottom: 6px;
+            border: 1px solid rgba(0, 255, 255, 0.15);
+            border-radius: 15px;
+            pointer-events: none;
+        }
+
+        .card-icon {
+            font-size: 4rem;
+            margin-top: 15px;
+            filter: drop-shadow(0 0 15px rgba(255, 0, 127, 0.6));
+        }
+
+        /* Malaki at bold na text para sa bawat salita */
+        .card-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #ff007f;
+            text-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        /* 3D Transform States para sa Swiping Effect */
+        .card-wrapper.left-card {
+            transform: translateX(-140px) translateZ(-150px) rotateY(40deg);
+            z-index: 1;
+            opacity: 0.3;
+        }
+
+        .card-wrapper.active-card {
+            transform: translateX(0) translateZ(80px) rotateY(0deg);
+            z-index: 3;
+            opacity: 1;
+        }
+        
+        /* Neon Glow kapag ang card ay nasa gitna */
+        .card-wrapper.active-card .card {
+            border-color: #00ffff;
+            box-shadow: 0 0 35px rgba(0, 255, 255, 0.6), inset 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+        
+        .card-wrapper.active-card .card-title {
+            color: #00ffff;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+        }
+
+        .card-wrapper.right-card {
+            transform: translateX(140px) translateZ(-150px) rotateY(-40deg);
+            z-index: 1;
+            opacity: 0.3;
+        }
+
+        /* Indicator Dots sa ilalim */
+        .indicators {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            z-index: 2;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background-color: #3d1e7d;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background-color: #00ffff;
+            box-shadow: 0 0 10px #00ffff;
+            width: 24px;
+            border-radius: 5px;
+        }
+
+        /* FROM VANNI (Inusog Pataas) */
+        .from-section {
+            position: absolute;
+            bottom: 75px;
+            left: 20px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 1px;
+            z-index: 10;
+        }
+
+        .vanni-name {
+            display: inline-block;
+            font-size: 1.4rem;
+            font-weight: 900;
+            animation: rainbowBlink 0.33s infinite linear;
+        }
+
+        @keyframes rainbowBlink {
+            0% { color: #ff0000; filter: drop-shadow(0 0 8px #ff0000); opacity: 1; }
+            20% { color: #ffaa00; filter: drop-shadow(0 0 8px #ffaa00); opacity: 0.3; }
+            40% { color: #00ff00; filter: drop-shadow(0 0 8px #00ff00); opacity: 1; }
+            60% { color: #00ffff; filter: drop-shadow(0 0 8px #00ffff); opacity: 0.3; }
+            80% { color: #0000ff; filter: drop-shadow(0 0 8px #0000ff); opacity: 1; }
+            100% { color: #ff00ff; filter: drop-shadow(0 0 8px #ff00ff); opacity: 0.3; }
+        }
+
+        /* LALAGYAN NG VIDEO AREA AT NG KAMAY */
+        .video-wrapper-box {
+            position: absolute;
+            bottom: 75px;
+            right: 20px;
+            width: 140px;
+            height: 90px;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        /* VIDEO CONTAINER */
+        .video-container {
+            width: 100%;
+            height: 100%;
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+            background: #000;
+            pointer-events: none;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ANIMATED NA KAMAY (VISIBLE PAPUNTA, INVISIBLE PABALIK) */
+        .unmute-btn {
+            position: absolute;
+            top: 60%;
+            left: -50px;
+            transform: translateY(-50%);
+            background: none;
+            color: white;
+            border: none;
+            font-size: 2.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 12;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.9));
+            animation: handTapLeftToRightInvisibleReturn 2s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        /* Bagong Animation Logic */
+        @keyframes handTapLeftToRightInvisibleReturn {
+            0% {
+                left: -50px;
+                opacity: 0; /* Nakatago sa simula */
+                transform: translateY(-50%) scale(1);
+            }
+            15% {
+                opacity: 1; /* Lilitaw habang pumapasok pakanan */
+            }
+            50% {
+                left: 40%; /* Darating sa gitna ng video */
+                opacity: 1;
+                transform: translateY(-50%) scale(1);
+            }
+            65% {
+                left: 40%;
+                opacity: 1;
+                transform: translateY(-50%) scale(0.8); /* Epektong pagpindot */
+            }
+            75% {
+                left: 40%;
+                opacity: 0; /* Agad maglalaho/magiging invisible matapos pumindot */
+                transform: translateY(-50%) scale(1.1);
+            }
+            100% {
+                left: -50px; /* Babalik sa kaliwa habang invisible */
+                opacity: 0;
+                transform: translateY(-50%) scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slider-container" id="slider">
+        <!-- CARD 1 -->
+        <div class="card-wrapper left-card" data-index="0">
+            <div class="card">
+                <div class="card-icon">🌤️</div>
+                <div class="card-title">DAY<br>ARIANNA</div>
+                <div style="height: 20px;"></div>
+            </div>
+        </div>
+
+        <!-- CARD 2 (Unang Nakikita sa Gitna) -->
+        <div class="card-wrapper active-card" data-index="1">
+            <div class="card">
+                <div class="card-icon">🎉</div>
+                <div class="card-title">HAVE</div>
+                <div style="height: 20px;"></div>
+            </div>
+        </div>
+
+        <!-- CARD 3 -->
+        <div class="card-wrapper right-card" data-index="2">
+            <div class="card">
+                <div class="card-icon">🙏</div>
+                <div class="card-title">A<br>BLESSED</div>
+                <div style="height: 20px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visual Dots Indicator -->
+    <div class="indicators">
+        <div class="dot" data-dot="0"></div>
+        <div class="dot active" data-dot="1"></div>
+        <div class="dot" data-dot="2"></div>
+    </div>
+
+    <!-- Kaliwang Baba: FROM VANNI -->
+    <div class="from-section">
+        FROM: <span class="vanni-name">VANNI</span>
+    </div>
+
+    <!-- Kanang Baba: Wrapper para sa video at smooth hand animation -->
+    <div class="video-wrapper-box" onclick="unmuteVideo()">
+        <div class="video-container">
+            <video id="bgVideo" src="song.mp4" loop playsinline autoplay muted></video>
+        </div>
+        <button class="unmute-btn" id="unmuteButton">👆</button>
+    </div>
+
+    <script>
+        const cards = document.querySelectorAll('.card-wrapper');
+        const dots = document.querySelectorAll('.dot');
+        const sliderContainer = document.getElementById('slider');
+        let currentIndex = 1; 
+        let autoSwipeTimer;
+        const swipeSpeed = 1000; 
+
+        function unmuteVideo() {
+            const video = document.getElementById('bgVideo');
+            const button = document.getElementById('unmuteButton');
+            
+            video.muted = false;
+            button.style.display = 'none';
+        }
+
+        function updateSlider() {
+            cards.forEach((card) => {
+                const cardIndex = parseInt(card.getAttribute('data-index'));
+                card.classList.remove('active-card', 'left-card', 'right-card');
+
+                if (cardIndex === currentIndex) {
+                    card.classList.add('active-card');
+                } else if (cardIndex === (currentIndex - 1 + 3) % 3) {
+                    card.classList.add('left-card');
+                } else {
+                    card.classList.add('right-card');
+                }
+            });
+
+            dots.forEach((dot) => {
+                const dotIndex = parseInt(dot.getAttribute('data-dot'));
+                if (dotIndex === currentIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        function nextCard() {
+            currentIndex = (currentIndex + 1) % 3;
+            updateSlider();
+        }
+
+        function prevCard() {
+            currentIndex = (currentIndex - 1 + 3) % 3;
+            updateSlider();
+        }
+
+        function startAutoSwipe() {
+            autoSwipeTimer = setInterval(nextCard, swipeSpeed);
+        }
+
+        function resetAutoSwipe() {
+            clearInterval(autoSwipeTimer);
+            startAutoSwipe();
+        }
+
+        startAutoSwipe();
+
+        cards.forEach((card) => {
+            card.addEventListener('click', () => {
+                currentIndex = parseInt(card.getAttribute('data-index'));
+                updateSlider();
+                resetAutoSwipe();
+            });
+        });
+
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        sliderContainer.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches.screenX;
+            clearInterval(autoSwipeTimer);
+        }, { passive: true });
+
+        sliderContainer.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches.screenX;
+            handleSwipe();
+            resetAutoSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            if (touchStartX - touchEndX > 40) {
+                nextCard();
+            }
+            if (touchEndX - touchStartX > 40) {
+                prevCard();
+            }
+        }
+    </script>
+</body>
+</html>
